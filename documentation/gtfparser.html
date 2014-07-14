@@ -70,7 +70,7 @@
     'gene_id_attributes'    : ['\n'],
     'gene_id'               : '"NM_012312"',
     'exons'                 : [(131449, 131501), (132294, 132329), (134766, 135065), (136584, 136877), (140046, 140096), (144361, 144465), (144928, 144980), (145079, 145745)]
-    'furthestAddedExon'     : 145745
+    'furthest_added_exon'     : 145745
 }</pre>
 </div>
 <p>It must be noted that any invalid GTF entries will cause its corresponding transcript to be thrown out, and therefore not included in the output.</p>
@@ -127,12 +127,12 @@
 <dl class="attribute">
 <dt id="gtf_parser.transcript.exons">
 <tt class="descname">exons</tt><a class="headerlink" href="#gtf_parser.transcript.exons" title="Permalink to this definition">¶</a></dt>
-<dd><p>a list of tuples per exon.  The tuples are formatted: (start, end), using 0-based inclusive coordinates.</p>
+<dd><p>a list of integer tuples per exon.  The tuples are formatted: (start, end), using 0-based inclusive coordinates.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="gtf_parser.transcript.furthestAddedExon">
-<tt class="descname">furthestAddedExon</tt><a class="headerlink" href="#gtf_parser.transcript.furthestAddedExon" title="Permalink to this definition">¶</a></dt>
+<dt id="gtf_parser.transcript.furthest_added_exon">
+<tt class="descname">furthest_added_exon</tt><a class="headerlink" href="#gtf_parser.transcript.furthest_added_exon" title="Permalink to this definition">¶</a></dt>
 <dd><p>the integer end coordinate of the last exon of the transcript</p>
 </dd></dl>
 
