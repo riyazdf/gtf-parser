@@ -63,7 +63,7 @@ class transcript(object):
         self.gene_id_attributes = gene_id_attributes
         self.gene_id = gene_id
         self.exons = []
-        self.furthestAddedExon = 0
+        self.furthest_added_exon = 0
 
         self.source = source
 
@@ -81,9 +81,9 @@ class transcript(object):
                 "Invalid exon start/stop in transcript: " + str(self.transcript_id))
 
         # Add an exon to the end (i.e. exons are in order)
-        if self.furthestAddedExon < exon[0]:
+        if self.furthest_added_exon < exon[0]:
             self.exons += [exon]
-            self.furthestAddedExon = exon[1]
+            self.furthest_added_exon = exon[1]
             return
 
         for e in self.exons:
