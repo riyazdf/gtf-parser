@@ -1,0 +1,220 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GTF Parsing &mdash; Transcriptome FASTA Writer 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Transcriptome FASTA Writer 0.1 documentation" href="index.html" />
+    <link rel="next" title="FASTA Parsing" href="fastaparser.html" />
+    <link rel="prev" title="Quick Start" href="quickstart.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fastaparser.html" title="FASTA Parsing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quick Start"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Transcriptome FASTA Writer 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-gtf_parser">
+<span id="gtf-parsing"></span><h1>GTF Parsing<a class="headerlink" href="#module-gtf_parser" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Using gtf_parser.py, data for each transcript is stored in a transcript object:</p>
+<div class="highlight-python"><pre>#
+#   transcript
+#
+{
+    'transcript_id'         : 'NM_012312',
+    'seqname'               : 'chr19_gl000209_random'',
+    'strand'                : '+',
+    'frame'                 : '.',
+    'gene_id_attributes'    : ['\n'],
+    'gene_id'               : '"NM_012312"',
+    'exons'                 : [(131449, 131501), (132294, 132329), (134766, 135065), (136584, 136877), (140046, 140096), (144361, 144465), (144928, 144980), (145079, 145745)]
+    'furthestAddedExon'     : 145745
+}</pre>
+</div>
+<p>It must be noted that any invalid GTF entries will cause its corresponding transcript to be thrown out, and therefore not included in the output.</p>
+<p>gtf_parser.py uses the function gtf_parse to create and return a dictionary of transcript objects, keyed by transcript ID.</p>
+</div>
+<div class="section" id="transcript">
+<h2>transcript<a class="headerlink" href="#transcript" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gtf_parser.transcript">
+<em class="property">class </em><tt class="descclassname">gtf_parser.</tt><tt class="descname">transcript</tt><big>(</big><em>transcript_id</em>, <em>seqname</em>, <em>strand</em>, <em>frame</em>, <em>gene_id_attributes</em>, <em>gene_id</em><big>)</big><a class="headerlink" href="#gtf_parser.transcript" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object for a given transcript id in the GTF file.  Will be in the output.</p>
+<dl class="method">
+<dt id="gtf_parser.transcript.add_exon">
+<tt class="descname">add_exon</tt><big>(</big><em>exon</em><big>)</big><a class="headerlink" href="#gtf_parser.transcript.add_exon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an exon to the transcript object.  Throws an exception if the exon is out of order in the GTF file, or when it overlaps another exon.  If an exception is thrown for a given transcript, it will not be included for the output.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gtf_parser.transcript.transcript_id">
+<tt class="descname">transcript_id</tt><a class="headerlink" href="#gtf_parser.transcript.transcript_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>a string containing the transcript ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gtf_parser.transcript.seqname">
+<tt class="descname">seqname</tt><a class="headerlink" href="#gtf_parser.transcript.seqname" title="Permalink to this definition">¶</a></dt>
+<dd><p>a string containing the name of the sequence, as specified in the GTF entry</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gtf_parser.transcript.strand">
+<tt class="descname">strand</tt><a class="headerlink" href="#gtf_parser.transcript.strand" title="Permalink to this definition">¶</a></dt>
+<dd><p>a string specifying the strand, as specified in the GTF entry</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gtf_parser.transcript.frame">
+<tt class="descname">frame</tt><a class="headerlink" href="#gtf_parser.transcript.frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>a string specifying the frame, as specified in the GTF entry</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gtf_parser.transcript.gene_id_attributes">
+<tt class="descname">gene_id_attributes</tt><a class="headerlink" href="#gtf_parser.transcript.gene_id_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>a string containing optional gene attributes (optional entries in the GTF file)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gtf_parser.transcript.gene_id">
+<tt class="descname">gene_id</tt><a class="headerlink" href="#gtf_parser.transcript.gene_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>a string containing the gene ID</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gtf_parser.transcript.exons">
+<tt class="descname">exons</tt><a class="headerlink" href="#gtf_parser.transcript.exons" title="Permalink to this definition">¶</a></dt>
+<dd><p>a list of tuples per exon.  The tuples are formatted: (start, end), using 0-based inclusive coordinates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gtf_parser.transcript.furthestAddedExon">
+<tt class="descname">furthestAddedExon</tt><a class="headerlink" href="#gtf_parser.transcript.furthestAddedExon" title="Permalink to this definition">¶</a></dt>
+<dd><p>the integer end coordinate of the last exon of the transcript</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="gtf-parse">
+<h2>gtf_parse<a class="headerlink" href="#gtf-parse" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gtf_parser.gtf_parse">
+<tt class="descclassname">gtf_parser.</tt><tt class="descname">gtf_parse</tt><big>(</big><em>input_gtf</em><big>)</big><a class="headerlink" href="#gtf_parser.gtf_parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the input GTF file by line.  Creates a list of transcript objects that include each transcript&#8217;s id, seqname, strand, frame, gene id, and its exons.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">GTF Parsing</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#transcript">transcript</a></li>
+<li><a class="reference internal" href="#gtf-parse">gtf_parse</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quickstart.html"
+                        title="previous chapter">Quick Start</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fastaparser.html"
+                        title="next chapter">FASTA Parsing</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/gtfparser.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fastaparser.html" title="FASTA Parsing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quick Start"
+             >previous</a> |</li>
+        <li><a href="index.html">Transcriptome FASTA Writer 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Riyaz Faizullabhoy.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
