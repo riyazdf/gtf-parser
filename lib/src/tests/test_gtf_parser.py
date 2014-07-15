@@ -34,7 +34,16 @@ class TestTranscript(unittest.TestCase):
         self.assertEqual( trans._furthest_added_exon, 35 )
 
         self.assertRaises( Exception, trans.add_exon, (32, 37) )
-
         self.assertRaises( Exception, trans.add_exon, (30, 37) )
+
+        self.assertEqual( trans.front_coordinate, 15 )
+        self.assertEqual( trans.end_coordinate, 35 )
+
+        # TODO: test bisect op
+
+    def test_to_gtf(self):
+        trans = Transcript('trans0', 'chr1', '+', None, None, 'gene0')
+
+        self.assertRaises( Exception, trans.to_gtf )
 
 

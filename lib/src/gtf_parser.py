@@ -128,6 +128,8 @@ class Transcript(object):
         return -1
 
     def to_gtf(self):
+        if len(self.exons) == 0:
+            raise Exception( 'Cannot print to GTF if no exons' )
         trans_str = []
         trans_str.append(self.refname)
         trans_str.append(self.source if self.source is not None else 'NA')
