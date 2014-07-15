@@ -29,7 +29,8 @@ def run():
     try:
         args = parser.parse_args()
     except ValueError as IOError:
-        print "Parsing Error, please use the following command-line format:\npython gtf_parser.py <GTF_FILE_NAME>"
+        print >> sys.stderr, "Parsing Error, please use the following ' \
+                'command-line format:\npython gtf_parser.py <GTF_FILE_NAME>"
 
     return gtf_parse(args.gi)
 
@@ -97,12 +98,16 @@ class transcript(object):
 
     @property
     def front_coordinate(self):
-        """Returns the left-most coordinate of the left-most exon of the transcript object."""
+        """Returns the left-most coordinate of the left-most exon of the
+        transcript object."""
+
         return self.exons[0][0]
 
     @property
     def end_coordinate(self):
-        """Returns the right-most coordinate of the last (right-most) exon of the transcript object."""
+        """Returns the right-most coordinate of the last (right-most) exon of
+        the transcript object."""
+
         return self.exons[-1][1]
 
     def compatible(self, pos):
@@ -132,8 +137,8 @@ class transcript(object):
             exon_str.append(str(self.frame))
             exon_str.append('gene_id "' + self.gene_id + '";' +
                             ' transcript_id "' + self.transcript_id + '";')
-            # FIXME: after gene_id_attributes is parsers correctly, add this line.
-            # (and a space)
+            # FIXME: after gene_id_attributes is parsers correctly, add this
+            # line.  (and a space)
             # self.gene_id_attributes)
             all_exons.append('\t'.join(exon_str))
 
@@ -153,7 +158,10 @@ class transcript(object):
 def gtf_parse(input_gtf):
     """Parses the input GTF file by line.
 
-    Creates a list of transcript objects that include each transcript's id, refname, strand, frame, gene id, and its exons.  Uses 1-based inclusive coordinates.  For example, start: 1, end: 2 would be an exon of length two (at 1, 2).
+    Creates a list of transcript objects that include each transcript's id,
+    refname, strand, frame, gene id, and its exons.  Uses 1-based inclusive
+    coordinates.  For example, start: 1, end: 2 would be an exon of length two
+    (at 1, 2).
 
     """
     transcript_dictionary = {}
@@ -179,7 +187,7 @@ def gtf_parse(input_gtf):
                 continue
 
         except IndexError as i:
-            print "GTF File Input missing 'transcript_id' field"
+            print >> sys.stderr, "GTF File Input missing 'transcript_id' field"
 
         if current_transcript is None:
             try:
@@ -200,9 +208,9 @@ def gtf_parse(input_gtf):
                         gtf_line[3]), int(
                         gtf_line[4])))
             except IndexError as i:
-                print "GTF File Input missing fields"
+                print >> sys.stderr"GTF File Input missing fields"
             except Exception as e:
-                print(e)
+                print >> sys.stderr, e
                 bad_transcripts += current_transcript.transcript_id
                 current_transcript = None  # throw out the bad transcript
                 transcript_dictionary[transcript_id] = None
@@ -234,9 +242,9 @@ def gtf_parse(input_gtf):
                         gtf_line[4])))
 
             except IndexError as i:
-                print "GTF File Input missing fields"
+                print >> sys.stderr, "GTF File Input missing fields"
             except Exception as e:
-                print(e)
+                print >> sys.stderr, (e)
                 bad_transcripts += current_transcript.transcript_id
                 current_transcript = None
                 transcript_dictionary[transcript_id] = None
@@ -248,9 +256,9 @@ def gtf_parse(input_gtf):
                         gtf_line[3]), int(
                         gtf_line[4])))
             except IndexError as i:
-                print "GTF File Input missing fields"
+                print >> sys.stderr, "GTF File Input missing fields"
             except Exception as e:
-                print(e)
+                print >> sys.stderr, e
                 bad_transcripts += current_transcript.transcript_id
                 current_transcript = None
                 transcript_dictionary[transcript_id] = None
