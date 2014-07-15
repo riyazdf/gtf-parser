@@ -79,7 +79,8 @@ class transcript(object):
 
         if exon[0] > exon[1]:
             raise Exception(
-                "Invalid exon start/stop in transcript: " + str(self.transcript_id))
+                "Invalid exon start/stop in transcript: " + \
+                        str(self.transcript_id))
 
         # Add an exon to the end (i.e. exons are in order)
         if self.furthest_added_exon < exon[0]:
@@ -91,9 +92,8 @@ class transcript(object):
             if (e[1] >= self.exons[0]) and (self.exons[1] >= e[0]):
                 raise Exception(
                     "Overlapping exon in transcript: " + str(self.transcript_id))
-        index = bisect_left(
-            self.exons,
-            exon)  # Add an exon elsewhere, to keep exons sorted
+        # Add an exon elsewhere, to keep exons sorted
+        index = bisect_left( self.exons, exon )
         self.exons.insert(index, exon)
 
     @property
@@ -159,9 +159,9 @@ def gtf_parse(input_gtf):
     """Parses the input GTF file by line.
 
     Creates a list of transcript objects that include each transcript's id,
-    refname, strand, frame, gene id, and its exons.  Uses 1-based inclusive
-    coordinates.  For example, start: 1, end: 2 would be an exon of length two
-    (at 1, 2).
+    refname, strand, frame, gene id, and its exons.  Uses pythonic 0-based
+    right-exclusive coordinates.  For example, start: 1, end: 2 would be an
+    exon of length one (at 2) in genomic one-based coordinates.
 
     """
     transcript_dictionary = {}
@@ -204,11 +204,9 @@ def gtf_parse(input_gtf):
                     gtf_line[1])
                 transcript_dictionary[transcript_id] = current_transcript
                 transcript_dictionary[transcript_id].add_exon(
-                    (int(
-                        gtf_line[3]), int(
-                        gtf_line[4])))
+                    ( int(gtf_line[3]) - 1, int(gtf_line[4]) ) )
             except IndexError as i:
-                print >> sys.stderr"GTF File Input missing fields"
+                print >> sys.stderr, "GTF File Input missing fields"
             except Exception as e:
                 print >> sys.stderr, e
                 bad_transcripts += current_transcript.transcript_id
@@ -218,9 +216,8 @@ def gtf_parse(input_gtf):
         elif transcript_id != current_transcript.transcript_id:
             try:
                 transcript_dictionary[transcript_id].add_exon(
-                    (int(
-                        gtf_line[3]), int(
-                        gtf_line[4])))
+                    ( int(gtf_line[3]) - 1,
+                        int(gtf_line[4]) ) )
                 current_transcript = transcript_dictionary[transcript_id]
             except KeyError as k:
                 gene_id = gtf_line[8].split(";")[0].split(
@@ -237,9 +234,8 @@ def gtf_parse(input_gtf):
                     gtf_line[1])
                 transcript_dictionary[transcript_id] = current_transcript
                 transcript_dictionary[transcript_id].add_exon(
-                    (int(
-                        gtf_line[3]), int(
-                        gtf_line[4])))
+                    (int(gtf_line[3]) - 1,
+                        int(gtf_line[4])))
 
             except IndexError as i:
                 print >> sys.stderr, "GTF File Input missing fields"
@@ -252,9 +248,8 @@ def gtf_parse(input_gtf):
         else:
             try:
                 current_transcript.add_exon(
-                    (int(
-                        gtf_line[3]), int(
-                        gtf_line[4])))
+                    (int(gtf_line[3]) - 1,
+                        int(gtf_line[4])))
             except IndexError as i:
                 print >> sys.stderr, "GTF File Input missing fields"
             except Exception as e:
