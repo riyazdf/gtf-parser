@@ -46,4 +46,17 @@ class TestTranscript(unittest.TestCase):
 
         self.assertRaises( Exception, trans.to_gtf )
 
+    def test_compatible(self):
+        trans = Transcript('trans0', 'chr1', '+', None, None, 'gene0')
+        trans.add_exon( (15, 30) )
 
+        self.assertEqual( trans.compatible( 90 ), None )
+        self.assertEqual( trans.compatible( 30 ), None )
+        self.assertEqual( trans.compatible( 29 ), 0 )
+
+        trans.add_exon( (35, 40) )
+        self.assertEqual( trans.compatible( 90 ), None )
+        self.assertEqual( trans.compatible( 30 ), None )
+        self.assertEqual( trans.compatible( 29 ), 0 )
+        self.assertEqual( trans.compatible( 35 ), 1 )
+        self.assertEqual( trans.compatible( 37 ), 1 )

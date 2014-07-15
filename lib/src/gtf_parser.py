@@ -119,13 +119,13 @@ class Transcript(object):
     def compatible(self, pos):
         """Returns the exon index if 'pos' is inside one of the exons.
 
-        Else, returns -1
+        Else, returns None
 
         """
-        for i in xrange(len(self.exons)):
-            if pos >= self.exons[i][0] and pos <= self.exons[i][1]:
-                return i
-        return -1
+        for idx, exon in enumerate(self.exons):
+            if pos >= exon[0] and pos < exon[1]:
+                return idx
+        return None
 
     def to_gtf(self):
         if len(self.exons) == 0:
