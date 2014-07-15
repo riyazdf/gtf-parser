@@ -35,7 +35,7 @@ def run():
     return gtf_parse(args.gi)
 
 
-class transcript(object):
+class Transcript(object):
 
     """An object for a given transcript id in the GTF file.
 
@@ -46,25 +46,25 @@ class transcript(object):
     def __init__(
             self,
             transcript_id,
-            seqname,
+            refname,
             strand,
             frame,
             gene_id_attributes,
             gene_id,
             source=None):
         self.transcript_id = transcript_id
-        self.refname = seqname
+        self.refname = refname
         self.strand = strand
         if strand == "+":
-            self.is_reverse = False
+            self._is_reverse = False
         else:
-            self.is_reverse = True
+            self._is_reverse = True
 
         self.frame = frame
         self.gene_id_attributes = gene_id_attributes
         self.gene_id = gene_id
         self.exons = []
-        self.furthest_added_exon = 0
+        self._furthest_added_exon = None
 
         self.source = source
 
@@ -82,14 +82,20 @@ class transcript(object):
                 "Invalid exon start/stop in transcript: " + \
                         str(self.transcript_id))
 
+        if exon[0] == self._furthest_added_exon:
+            raise Exception( 'Non-sensical exons. ' + \
+                    'One begins right after the other ends.' +  \
+                    ' This should all be one exon: {0}'.format( self ) )
+
         # Add an exon to the end (i.e. exons are in order)
-        if self.furthest_added_exon < exon[0]:
+        if self._furthest_added_exon < exon[0] or \
+                self._furthest_added_exon is None:
             self.exons += [exon]
-            self.furthest_added_exon = exon[1]
+            self._furthest_added_exon = exon[1]
             return
 
         for e in self.exons:
-            if (e[1] >= self.exons[0]) and (self.exons[1] >= e[0]):
+            if (e[1] >= exon[0]) and (exon[1] >= e[0]):
                 raise Exception(
                     "Overlapping exon in transcript: " + str(self.transcript_id))
         # Add an exon elsewhere, to keep exons sorted
@@ -144,6 +150,10 @@ class transcript(object):
 
         return '\n'.join(all_exons)
 
+    @property
+    def is_reverse(self):
+        return self._is_reverse
+
     def __repr__(self):
         return self.__str__()
 
@@ -194,7 +204,7 @@ def gtf_parse(input_gtf):
                 # FIXME: gene_id_attributes isn't being parsed correctly
                 gene_id = gtf_line[8].split(";")[0].split(
                     " ")[1].replace("\"", "")
-                current_transcript = transcript(
+                current_transcript = Transcript(
                     transcript_id,
                     gtf_line[0],
                     gtf_line[6],
@@ -223,7 +233,7 @@ def gtf_parse(input_gtf):
                 gene_id = gtf_line[8].split(";")[0].split(
                     " ")[1].replace("\"", "")
                 # FIXME: gene_id_attributes isn't being parsed correctly
-                current_transcript = transcript(
+                current_transcript = Transcript(
                     transcript_id,
                     gtf_line[0],
                     gtf_line[6],
