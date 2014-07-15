@@ -60,3 +60,6 @@ class TestTranscript(unittest.TestCase):
         self.assertEqual( trans.compatible( 29 ), 0 )
         self.assertEqual( trans.compatible( 35 ), 1 )
         self.assertEqual( trans.compatible( 37 ), 1 )
+
+# TODO: test gtf_write
+# TODO: test gtf_parse
