@@ -61,5 +61,21 @@ class TestTranscript(unittest.TestCase):
         self.assertEqual( trans.compatible( 35 ), 1 )
         self.assertEqual( trans.compatible( 37 ), 1 )
 
+class TestGTFParse(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_gtf_parse_snippet(self):
+        fname = 'tests/inputs/snippet.gtf'
+
+        transcripts = gtf_parse(fname)
+        self.assertEqual( len(transcripts), 1 )
+        self.assertEqual( transcripts.keys(), ['NM_021025'] )
+
+    # TODO: test gtf_parse more thoroughly
+    
+
 # TODO: test gtf_write
-# TODO: test gtf_parse

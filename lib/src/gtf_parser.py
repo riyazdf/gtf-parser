@@ -187,7 +187,7 @@ def gtf_parse(input_gtf):
 
         gtf_line = (line.split("\t"))
 
-        if gtf_line[2] != "exon":
+        if len(gtf_line) < 9 or gtf_line[2] != "exon":
             continue
 
         try:
