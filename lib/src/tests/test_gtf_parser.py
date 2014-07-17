@@ -1,3 +1,5 @@
+import filecmp
+import os
 import unittest
 
 from gtf_parser import *
@@ -74,8 +76,27 @@ class TestGTFParse(unittest.TestCase):
         transcripts = gtf_parse(fname)
         self.assertEqual( len(transcripts), 1 )
         self.assertEqual( transcripts.keys(), ['NM_021025'] )
+        self.assertEqual( len(transcripts['NM_021025'].exons), 3)
+        self.assertEqual( transcripts['NM_021025'].front_coordinate,
+                170736288 - 1  )
+        self.assertEqual( transcripts['NM_021025'].end_coordinate, 170739138 )
 
-    # TODO: test gtf_parse more thoroughly
+    # TODO: test gtf_parse more thoroughly -- write test for gene attributes
     
+class TestGTFWrite(unittest.TestCase):
+    def setUp(self):
+        pass
 
-# TODO: test gtf_write
+    def tearDown(self):
+        pass
+
+    def test_gtf_write_snippet(self):
+        fname = 'tests/inputs/snippet.gtf'
+
+        transcripts = gtf_parse(fname)
+        with open('tests/outputs/exons.gtf', 'w') as fout:
+            gtf_write(transcripts, fout)
+
+        self.assertTrue( filecmp.cmp('tests/outputs/exons.gtf',
+            'tests/inputs/snippet_exon_only.gtf') )
+        os.remove( 'tests/outputs/exons.gtf' )

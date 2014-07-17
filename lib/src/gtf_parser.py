@@ -21,8 +21,7 @@ def run():
     """
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        'gi',
+    parser.add_argument('gi',
         metavar='gtf_input',
         help="The GTF annotation input file name")
 
@@ -51,7 +50,8 @@ class Transcript(object):
             frame,
             gene_id_attributes,
             gene_id,
-            source=None):
+            score = None,
+            source = None):
         self.transcript_id = transcript_id
         self.refname = refname
         self.strand = strand
@@ -65,6 +65,11 @@ class Transcript(object):
         self.gene_id = gene_id
         self.exons = []
         self._furthest_added_exon = None
+
+        if score == '.':
+            self.score = None
+        else:
+            self.score = score
 
         self.source = source
 
@@ -138,9 +143,12 @@ class Transcript(object):
         all_exons = []
         for ex in self.exons:
             exon_str = copy.deepcopy(trans_str)
-            exon_str.append(str(ex[0]))
+            exon_str.append(str(ex[0] + 1))
             exon_str.append(str(ex[1]))
-            exon_str.append('.')
+            if self.score is None:
+                exon_str.append('.')
+            else:
+                exon_str.append(self.score)
             exon_str.append('-' if self.is_reverse else '+')
             exon_str.append(str(self.frame))
             exon_str.append('gene_id "' + self.gene_id + '";' +
@@ -213,6 +221,7 @@ def gtf_parse(input_gtf):
                     gtf_line[7],
                     gtf_line[8].split(" ")[3],
                     gene_id,
+                    gtf_line[5],
                     gtf_line[1])
                 transcript_dictionary[transcript_id] = current_transcript
                 transcript_dictionary[transcript_id].add_exon(
@@ -243,6 +252,7 @@ def gtf_parse(input_gtf):
                     gtf_line[8].split(" ")[
                         4:],
                     gene_id,
+                    gtf_line[5],
                     gtf_line[1])
                 transcript_dictionary[transcript_id] = current_transcript
                 transcript_dictionary[transcript_id].add_exon(
@@ -280,10 +290,11 @@ def gtf_parse(input_gtf):
 
 
 def gtf_write(all_trans, out_handle):
-    for key in all_trans:
-        cur_trans = all_trans[key]
-        print >> out_handle, cur_trans.to_gtf()
-
+    all_trans = sorted( all_trans.values(), key = lambda t: (t.refname,
+        t.front_coordinate) )
+    print all_trans
+    for trans in all_trans:
+        print >> out_handle, trans.to_gtf()
 
 if (__name__ == "__main__"):
     run()
