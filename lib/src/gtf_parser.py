@@ -282,10 +282,6 @@ def gtf_parse(input_gtf):
 
     gtf_file.close()
 
-    print >> sys.stderr, ("Number of transcript objects made: " +
-                          str(len(transcript_dictionary.keys())))
-    print >> sys.stderr, "Done."
-
     return transcript_dictionary
 
 
