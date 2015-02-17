@@ -168,7 +168,7 @@ class Transcript(object):
         return self.__str__()
 
     def __str__(self):
-        return '{0}\t{1}\t{2}\t{3}'.format(
+        return '{0}:{1}:{2}-{3}'.format(
             self.transcript_id,
             self.refname,
             self.front_coordinate,

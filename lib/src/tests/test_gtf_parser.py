@@ -82,7 +82,7 @@ class TestGTFParse(unittest.TestCase):
         self.assertEqual( transcripts['NM_021025'].end_coordinate, 170739138 )
 
     # TODO: test gtf_parse more thoroughly -- write test for gene attributes
-    
+
 class TestGTFWrite(unittest.TestCase):
     def setUp(self):
         pass
